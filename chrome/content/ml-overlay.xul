@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://multilookup/skin/overlay.css" type="text/css"?>
+<overlay id="sample" 
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+		 <script type="application/javascript" src="chrome://multilookup/content/overlay.js"/>
+		 <script type="application/javascript" src="chrome://multilookup/content/storage.js"/>
+		 <script type="application/javascript" src="chrome://multilookup/content/ml-options-v2.js"/>
+	
+		<keyset>
+		  <key id="ml-search" modifiers="accel" key="M" oncommand="document.getElementById('ml-toolbar-search-tbox').select()"/>
+		</keyset>
+	
+		<menupopup  id="contentAreaContextMenu">
+			<!--menuitem id="multilookup-menu-item" label="Multi-lookup" oncommand="Multilookup.Main.multiLookup()" /-->
+			
+		
+		</menupopup >		
+		
+		<toolbox id="navigator-toolbox">
+			<toolbar id="multilookup-toolbar" toolbarname="Multilookup Toolbar"
+				customizable="true" mode="full" context="toolbar-context-menu" 
+				collapsed="false" persist="collapsed"
+				class="chromeclass-toolbar"
+				insertbefore="PersonalToolbar"
+				>
+				
+				<label align="center">Multi-Lookup </label>
+				<!--button id="ml-toolbar-settings" 
+					label="Settings" 
+					class=""
+					oncommand="window.openDialog('chrome://multilookup/content/options.xul').focus();" /-->
+				<toolbaritem tooltiptext="Select a group or single search engine">
+					<menulist>
+						<menupopup id="ml-toolbar-group-mnpp" class="chromeclass-toolbar-additional" >
+							<menuitem label="Choose..." value="0" group_id="0" se_url="http://www.google.com/search?q=" se_base_url="www.google.com/search"/>
+							<menuseparator/>
+						</menupopup>
+					</menulist>
+				</toolbaritem>
+				<toolbaritem class="chromeclass-toolbar-additional">
+				<textbox id="ml-toolbar-search-tbox" cols="1" size="35" 
+					type="search" searchbutton="true"
+					placeholder="Multilookup"
+					timeout="50"
+					tooltiptext="Use CTRL+m shortcut"
+					oncommand="Multilookup.Toolbar.multiLookupToolbar();this.focus();" />
+				</toolbaritem>	
+				<!--button id="ml-toolbar-search-btn" 
+					label="Search" 
+					class=""
+					oncommand="Multilookup.Toolbar.multiLookupToolbar()" /-->
+				
+				<checkbox id="ml-integrate-microlearn" label="Enable &#181;Learn" checked="false" hidden="true"/>
+				
+				<button id="broadcast-port-microlearn" hidden="true"/>
+				<button id="ml-toolbar-settings2" 
+					label="Settings" 
+					class=""
+					oncommand="MLoptions.init();" />
+					
+				<button id="ml-toolbar-closeall" 
+					label="Close all" 
+					class=""
+					oncommand="Multilookup.Main.closeAllMLTabs();" />
+			</toolbar>
+		</toolbox>
+	
+		
+</overlay>
+
+

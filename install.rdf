@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>multilookup-addon@dbis.rwth-aachen.de</em:id>
+    <em:version>0.3.4</em:version>
+    <em:type>2</em:type>
+   
+    <!-- Target Application this extension can install into, 
+         with minimum and maximum supported versions. --> 
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>1.5</em:minVersion>
+        <em:maxVersion>30.0</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+   
+    <!-- Front End MetaData -->
+    <em:name>Multilookup: Multitab searching</em:name>
+    <em:description>Search multiple Web sources in the same time. You can add/remove, order and group search engines to fit your needs. A simple scenario is when you want to a vocabulary term in several online dictionaries. Multilookup will open (or reuse) tabs for each online dictionary.</em:description>
+    <em:creator>Dejan Kovachev</em:creator>
+    <em:homepageURL>http://dbis.rwth-aachen.de/~kovachev</em:homepageURL>
+  </Description>      
+</RDF>

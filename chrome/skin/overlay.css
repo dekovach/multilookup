@@ -1,0 +1,13 @@
+#ml-toolbar-search-btn {
+  list-style-image: url("chrome://multilookup/skin/search_btn_large.png");
+}
+
+toolbar[iconsize="small"] #ml-toolbar-search-btn {
+  list-style-image: url("chrome://multilookup/skin/search_btn_small.png");
+}
+/* toolbar#multilookup-toolbar button, toolbar#multilookup-toolbar toolbaritem{
+	min-width: 20px !important;
+	margin: 0px 0px 0px 0px !important;
+	padding: 0px 0px 0px 0px !important;
+	min-height: 15px !important; 	
+} */

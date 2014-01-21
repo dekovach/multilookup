@@ -1,0 +1,7 @@
+content     multilookup    chrome/content/ contentaccessible=yes
+skin      multilookup   classic/1.0   chrome/skin/
+
+# CSS for Toolbar Button
+style chrome://global/content/customizeToolbar.xul chrome://multilookup/skin/overlay.css
+
+overlay chrome://browser/content/browser.xul chrome://multilookup/content/ml-overlay.xul

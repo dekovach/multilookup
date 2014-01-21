@@ -1,0 +1,104 @@
+div.sort-section {
+	width: 457px;	
+}
+
+div.left-column {
+	float: left;	
+}
+
+div.right-column {
+	float: right;	
+}
+
+#groups, #search_engines { 
+	list-style-type: none; 
+	margin: 0; 
+	padding: 0; 
+	zoom: 1; 
+	width: 450px;
+	float: left;
+	margin: 0px 5px 30px 0px;
+	font-size: 13px;
+}
+
+#groups li, #search_engines li { 
+	margin: 0 5px 5px 5px; 
+	padding: 3px; 
+	/*width: 90%;*/ 
+	/*border: 1px solid black;*/
+}
+
+li.ui-state-disabled {
+	background-color: aliceblue;
+	opacity: 1 !important;
+	color: black !important;
+	border: 1px solid black !important;
+}
+div#if-content span.ui-icon{
+	display:inline-block;
+	background-image: url("jquery/images/ui-icons_222222_256x240.png");
+}
+
+div.edit-se {
+	float: right;
+	opacity: 0.2;
+}	
+
+div.edit-se:hover {
+	opacity: 1;
+}
+.right-separator {
+	border-right: 2px dashed black;
+}
+	
+li.se-elem {
+	margin-left: 25px !important;	
+}
+
+div.ml-tab-action {
+	clear: both;	
+}
+
+div.ml-tab-action button{
+	margin-top: 2em;	
+}
+
+#dialog-form {
+	width: 650px;
+	height: 300px;	
+}
+
+form label, form input { 
+	display:block; 
+}
+
+input.text { 
+	margin-bottom:12px; 
+	width:95%; 
+	padding: .4em; 
+}
+
+input.short-text { 
+	width:200px; 
+}
+
+fieldset { 
+	padding:0; 
+	border:0; 
+	margin-top:25px; 
+}
+
+span.highlight {
+	color: red;	
+}
+
+p.instruction {
+	font-size: 0.65em; 	
+}
+
+#status-message {
+	font-size: 0.65em;
+	display: none;
+	position: absolute;
+	left: 105em;	
+}

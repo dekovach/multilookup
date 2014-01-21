@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Multilookup Settings</title>
+	<link rel="stylesheet" href="ml-options.css" />
+	<link rel="stylesheet" href="jquery/jquery-ui.css" />
+	<script type="text/javascript" src="jquery/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="jquery/jquery-ui.min.js"></script>
+	
+	<script type="text/javascript" src="jquery/jquery.pnotify.min.js"></script>
+	<link href="jquery/jquery.pnotify.default.css" media="all" rel="stylesheet" type="text/css" />
+	<!-- Include this file if you are using Pines Icons. -->
+	<!--link href="jquery.pnotify.default.icons.css" media="all" rel="stylesheet" type="text/css" /-->
+
+<script>
+
+
+	$(function() {
+		$.pnotify.defaults.styling = "jqueryui";
+		$.pnotify.defaults.history = false;
+		
+		$( "#tabs" ).tabs({ active: 0 }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
+		
+		$( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+		
+
+		
+		$( "#groups" ).sortable({
+			cancel: ".ui-state-disabled",
+			placeholder: 'ui-state-highlight',
+			forcePlaceholderSize: true,
+			connectWith: "#search_engines",
+			update: function(event,ui) {
+
+				sendMsg('save-order'); //autosave everytime a change is made
+			}
+		});
+
+		$( "#search_engines" ).sortable({
+			items: "li:not(.ui-state-disabled)",
+			forcePlaceholderSize: true,
+			connectWith: "#groups",
+			update: function(event,ui) {
+
+					sendMsg('save-order'); //autosave everytime a change is made
+				}
+		});
+		
+		$("button.add-new").button({
+			icons: {primary: 'ui-icon-circle-plus'},
+			disabled: false
+		});
+		
+		$("button#add-new-se").click(
+			function() {
+				$( "#dialog-form" ).dialog( "open" );
+				return false;
+		});
+		
+		$("button#add-new-group").click(
+				function() {
+					$( "#dialog-form-group" ).dialog( "open" );
+					return false;
+			});
+
+		$( "#groups li, #search_engines li" ).disableSelection();
+		
+
+		
+		$(document).bind('multilookupOptionsEvent', function(e){
+			//alert("optiosn");
+			var msg = $('div#ml-options-inport').attr('msg');
+			if(!!msg) {
+				
+				switch (msg) {
+				    case "error":
+				        opts.title = "Oh No";
+				        opts.text = "Watch out for that water tower!";
+				        opts.type = "error";
+				        break;
+				    case "info":
+				        opts.title = "Breaking News";
+				        opts.text = "Have you met Ted?";
+				        opts.type = "info";
+				        break;
+				    case "order-save-success":
+				       
+				        $('#status-message').text("Changes saved.").show().delay(5000).fadeOut(1000);
+				        break;
+			    }
+			   	//$.pnotify(opts); //autosave preffered
+			   	$('div#ml-options-inport').attr('msg','');   	
+			}
+		});
+		
+		$('div#if-content').delegate('span.se-edit', 'click', function(){
+			if ("group" == $(this).parent().parent().attr('ml-type')) {
+				var groupLabel = $(this).parent().parent().text();
+				var groupKey = $(this).parent().parent().attr('key');
+				var groupRowid = $(this).parent().parent().attr('rowid');
+				$('#group-label').val(groupLabel);
+				$('#group-key').val(groupKey);
+				$('#group-rowid').val(groupRowid);
+				$( "#dialog-form-group" ).dialog( "open" );
+			} else if ("se" == $(this).parent().parent().attr('ml-type')) {
+				var seLabel = $(this).parent().parent().attr('se-label');
+				var seUrl = $(this).parent().parent().text();
+				var seRowid = $(this).parent().parent().attr('rowid');
+				$('#se-url').val(seUrl)
+				$('#se-label').val(seLabel); 
+				$('#se-form-rowid').val(seRowid); 
+				$( "#dialog-form" ).dialog( "open" );
+			}
+			return false;
+		});
+		
+		$('div#if-content').delegate('span.se-remove', 'click', function(){
+			if ("group" == $(this).parent().parent().attr('ml-type')) {
+				var groupRowid = $(this).parent().parent().attr('rowid');
+				if (confirm("Are you sure that you want to remove this group of search engines?")) {
+					sendData('delete-group', {rowid:groupRowid});
+				}
+			} else if ("se" == $(this).parent().parent().attr('ml-type')) {
+				var seRowid = $(this).parent().parent().attr('rowid');
+				if (confirm("Are you sure that you want to remove this search engine?")) {
+					sendData('delete-se', {rowid:seRowid});
+				}
+			}
+		});
+		
+		$( "#dialog-form" ).dialog({
+			autoOpen: false,
+			height: 480,
+			width: 830,
+			modal: true,
+			buttons: {
+				"Save": function() {
+					var seUrl = $('#se-url');
+					var seLabel = $('#se-label'); 
+					var seRowid = $('#se-form-rowid'); 
+					var bValid = true;
+					//bValid = bValid && checkRegexp( seUrl, /^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$/, "Search URL must be a valid URL." );
+					if ( bValid ) {
+						/* $('ul#search_engines').append("<li class='ui-state-default se-elem' ml-type='se' rowid=''><span class='ui-icon ui-icon-search'></span>" 
+								+ seUrl.val()
+								+ "<div class='edit-se'>"
+									+ "<span class='ui-icon ui-icon-pencil se-edit'></span>"
+									+ "<span class='ui-icon ui-icon-close se-remove'></span>"
+								+ "</div></li>");  */
+						sendData('save-se', {rowid:seRowid.val(),
+											 url:seUrl.val(),
+											 label:seLabel.val()}
+							);
+						clearAddEditSEForm();
+						$( this ).dialog( "close" );
+					}
+				},
+				Cancel: function() {
+					clearAddEditSEForm();
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+			}
+		});
+		
+		function clearAddEditSEForm() {
+			$('#se-url').val("");
+			$('#se-label').val(""); 
+			$('#se-form-rowid').val(""); 
+		}
+		
+		function checkRegexp( o, regexp, n ) {
+			 if ( !( regexp.test( o.val() ) ) ) {
+				 o.addClass( "ui-state-error" );
+				 updateTips( n );
+				 return false;
+			 } else {
+			 	return true;
+			 }
+		};
+		
+		$( "#dialog-form-group" ).dialog({
+			autoOpen: false,
+			height: "auto",
+			width: "auto",
+			modal: true,
+			buttons: {
+				"Save": function() {
+					var groupKey = $('#group-key').val();
+					var groupLabel = $('#group-label').val(); 
+					var groupRowid = $('#group-form-rowid').val(); 
+					sendData('save-group', {rowid:groupRowid,
+											label:groupLabel, 
+											key:groupKey}
+						);
+					clearAddEditGroupForm();
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					clearAddEditGroupForm();
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+			}
+		});
+		
+		function clearAddEditGroupForm() {
+			$('#group-key').val("");
+			$('#group-label').val(""); 
+			$('#group-form-rowid').val(""); 
+		}
+		
+		function sendMsg(msg) {
+			var outport = document.getElementById("ml-options-outport");
+			outport.setAttribute("msg", msg);
+			var event = document.createEvent("HTMLEvents");
+			event.initEvent("multilookupAddonEvent", true, false);
+			outport.dispatchEvent(event);
+		};
+		
+		function sendData(msg, data) {
+			var dataElement = document.createTextNode(JSON.stringify(data));
+			var outport = document.getElementById("ml-options-outport");
+			outport.textContent = "";
+			outport.appendChild(dataElement);
+			sendMsg(msg);
+		}
+		
+	});
+	
+</script>
+
+<style>
+.ui-tabs-vertical { width: 75em; }
+.ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 14em; }
+.ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+.ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
+.ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 56em;}
+</style>
+</head>
+
+<body>
+
+<div style="display:block" id="ml-options-inport" ></div>
+<input type="hidden" id="ml-options-outport" value="" />
+
+<div id="tabs">
+
+	<div id="status-message"></div>
+
+	<ul>
+		<li><a href="#tabs-3">Search Organizer </a></li>
+		<li><a href="#tabs-1">Add Search Engine</a></li>
+		<li><a href="#tabs-2">Search Engine Catalog</a></li>
+	</ul>
+	
+	<div id="tabs-1">
+		<p>How to add a new search engine</p>
+			<p>Most search web sites, when executing the search, perform an HTTP GET request. The GET request usually contains the search term as parameter.
+			For example, searching on www.google.com for the term 'XYZ' results in the following query:</p>
+			<p>https://www.google.de/search?<span class="highlight">q=XYZ</span>&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:de:official&client=firefox-a</p>
+			<p>We can expoloit this to speed up searching on multiple pages at the same time. Multi-lookup helps you join the individual sources (i.e. search engines) into groups which try provide comprehensive results for the intended search interest. For example, you can group the following dictionary web sites to achieve 'English to English and German' translation:</p>
+			<ul>
+				<li>thefreedictionary.com</li>
+				<li>translate.google.com</li>
+				<li>en.wiktionary.org</li>
+				<li>dictionary.reference.com</li>
+				<li>dict.cc</li>
+			</ul>
+			
+		<p>To add a new search engine</p>
+		<ul>
+			<li>Go the web page of the search engine you want to include,</li> 
+			<li>Search for XYZ123 in the web page search input box (Not in the Multi-Lookup search)</li> 
+			<li>When the search results are delivered, check carefully if the URL contains somewhere 'XYZ123'. If it contains, copy the URL. Otherwise the web page doesn't support search by HTTP GET</li> 
+			<li>Go to the 'Search Organizer' tab, click 'New Search Engine...' and paste the copied URL in the 'Search URL' field</li>
+		</ul>
+	</div>
+
+	<div id="tabs-2">
+		<h2>Catalog</h2>
+		<p>Coming soon...</p>
+	</div>
+
+	<div id="tabs-3">
+		<p>Organize your search engines in groups by drag and drop. You can take the new search engines from the right list which are not assigned to any group. Drag an entry from right to left to add an engines to a group. To remove an engine from a group drag it from left to right. 
+		<br/>
+		You can reorder the search engines which determines the order how the browser tabs are opened during search.</p>
+		<hr/>
+		<div id='if-content'>
+	
+			<div class="sort-section left-column">
+			<ul id="groups" class="right-separator">
+				<!-- li class="ui-state-default ui-state-disabled">Group 1</li-->
+				
+			</ul>
+			<button id="add-new-group" class="add-new">New Group...</button>
+			</div>
+	
+			<div class="sort-section right-column">
+			<ul id="search_engines">
+				<!--li class="ui-state-default">Item 2.1</li-->
+				
+			</ul>
+			<button id="add-new-se" class="add-new">New Search Engine...</button>
+			</div>
+			
+		</div>
+
+	</div>
+</div>
+
+<div id="dialog-form" title="Add new / Edit search engine">
+	<p class="validateTips instruction">All form fields are required.</p>
+	<p class="instruction">Enter the name (label) of the search engine and the search URL. The search parameter must be at the end of the URL and must be empty. 
+	For example, is you search on Google.com the search URL would look like this: 
+	<br/>
+	<br/>
+	https://www.google.de/search?<span class="highlight">q=XYZ</span>&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:de:official&client=firefox-a
+	<br/>
+	<br/>
+	you need to enter it here like:
+	<br/>
+	<br/>
+	https://www.google.de/search?ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:de:official&client=firefox-a&<span class="highlight">q=</span>
+	</p>
+	<form>
+		<fieldset>
+			<label for="se-label">Label</label>
+			<input type="text" name="se-label" id="se-label" class="short-text text ui-widget-content ui-corner-all" />
+			<label for="se-url">Search URL</label>
+			<input type="text" name="se-url" id="se-url" value="" class="text ui-widget-content ui-corner-all" />
+			<input type="hidden" name="se-form-rowid" id="se-form-rowid" value="" />
+		</fieldset>
+	</form>
+</div>
+
+<div id="dialog-form-group" title="Add new / Edit groups">
+	<p class="validateTips instruction">All form fields are required.</p>
+	<!-- p class="instruction"> 
+	</p-->
+	<form>
+		<fieldset>
+			<label for="group-key">Key (Abbreviation)</label>
+			<input type="text" name="group-key" id="group-key" value="" class="short-text text ui-widget-content ui-corner-all" />
+			<label for="group-label">Group Name</label>
+			<input type="text" name="group-label" id="group-label" class="text ui-widget-content ui-corner-all" />
+			<input type="hidden" name="group-form-rowid" id="group-form-rowid" value="" />
+		</fieldset>
+	</form>
+</div>
+
+</body>
+</html>

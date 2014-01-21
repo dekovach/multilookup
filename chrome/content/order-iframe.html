@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta name="" http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Draggable</title>
+		<script type="text/javascript" src="jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="jquery/jquery-ui.min.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="order-iframe.css" />
+
+	<script>
+	$(function() {
+		$( "#groups" ).sortable({
+			cancel: ".ui-state-disabled",
+			placeholder: 'ui-state-highlight',
+			connectWith: "#search_engines"
+		});
+
+		$( "#search_engines" ).sortable({
+			items: "li:not(.ui-state-disabled)",
+			connectWith: "#groups"
+		});
+
+		$( "#groups li, #search_engines li" ).disableSelection();
+		
+	});
+	</script>
+</head>
+<body>
+	<div id='if-content'>
+
+		<div >
+		<ul id="groups" class="right-separator">
+			<li class="ui-state-default ui-state-disabled">Group 1</li>
+			
+		</ul>
+		</div>
+
+		
+		
+		<div>
+		<ul id="search_engines">
+			<!--li class="ui-state-default">Item 2.1</li-->
+			
+		</ul>
+		</div>
+		
+	</div>
+</body>
+</html>
