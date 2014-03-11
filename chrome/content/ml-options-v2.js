@@ -59,7 +59,7 @@ MLoptions.prototype = {
 			for(obj in llURLs) {
 				var liRow = document.createElement("li");
 				liRow.setAttribute("rowid", llURLs[obj].rowid);
-				liRow.innerHtml = llURLs[obj].label;
+				liRow.textContent = llURLs[obj].label;
 			
 				liSE.appendChild(liRow);
 				
@@ -186,8 +186,12 @@ MLoptions.prototype = {
 		var ulSE = doc.getElementById('search_engines');
 		var ulGroups = doc.getElementById('groups');
 		
-		ulSE.innerHTML = "";
-		ulGroups.innerHTML = "";
+		while(ulSE.firstChild) {
+			ulSE.removeChild(ulSE.firstChild);
+		}
+		while(ulGroups.firstChild) {
+			ulGroups.removeChild(ulGroups.firstChild);
+		}
 		
 		try {
 			//load groups
@@ -201,10 +205,19 @@ MLoptions.prototype = {
 				liGroup.setAttribute('ml-type', "group");
 				liGroup.setAttribute('rowid', groups[obj].rowid);
 				liGroup.setAttribute('key', groups[obj].key);
-				liGroup.innerHTML = "<span class='ui-icon ui-icon-folder-open'></span>" 
-					+ groups[obj].label
-					+ "<div class='edit-se'><span class='ui-icon ui-icon-pencil se-edit'></span>"
-					+ "<span class='ui-icon ui-icon-close se-remove'></span></div>";					
+				var liSpanIconFolder = doc.createElement("span");
+				liSpanIconFolder.setAttribute('class', 'ui-icon ui-icon-folder-open');
+				liGroup.appendChild(liSpanIconFolder);
+				liGroup.appendChild(document.createTextNode(groups[obj].label));
+				var liDiv = doc.createElement('div');
+				liDiv.setAttribute('class', 'edit-se');
+				var liSpanEdit = doc.createElement("span");
+				liSpanEdit.setAttribute('class', 'ui-icon ui-icon-pencil se-edit');
+				liDiv.appendChild(liSpanEdit);
+				var liSpanRemove = doc.createElement("span");
+				liSpanRemove.setAttribute('class', 'ui-icon ui-icon-close se-remove');
+				liDiv.appendChild(liSpanRemove);
+				liGroup.appendChild(liDiv);
 				ulGroups.appendChild(liGroup);
 				
 				var spliceList = [];
@@ -216,17 +229,16 @@ MLoptions.prototype = {
 						liSE.setAttribute('ml-type', "se");
 						liSE.setAttribute('rowid', llURLs[i].rowid);
 						liSE.setAttribute('se-label', llURLs[i].label);
-						liSE.innerHTML = "<span class='ui-icon ui-icon-search'></span>" 
-							+ llURLs[i].label
-							+ "<br/>"
-							+ llURLs[i].url
-							+ "<div class='edit-se'><span class='ui-icon ui-icon-pencil se-edit'></span>"
-							+ "<span class='ui-icon ui-icon-close se-remove'></span></div>";
-					
+						var liSpanIconSearch = doc.createElement("span");
+						liSpanIconSearch.setAttribute('class', 'ui-icon ui-icon-search');
+						liSE.appendChild(liSpanIconSearch);
+						liSE.appendChild(doc.createTextNode(llURLs[i].label));
+						liSE.appendChild(doc.createElement('br'));
+						liSE.appendChild(doc.createTextNode(llURLs[i].url));
+						liSE.appendChild(liDiv.cloneNode(true));
 						ulGroups.appendChild(liSE);
 						
 						spliceList.push(i);
-//						llURLs.splice(i,1);
 					}
 				}
 				
@@ -240,7 +252,7 @@ MLoptions.prototype = {
 			
 			var liSEAnchor = doc.createElement("li");
 			liSEAnchor.setAttribute('class', 'ui-state-default ui-state-disabled');
-			liSEAnchor.innerHTML = "Not Grouped Search Engines";
+			liSEAnchor.textContent = "Not Grouped Search Engines";
 			ulSE.appendChild(liSEAnchor);
 			
 			for(obj in llURLs) {
@@ -249,13 +261,14 @@ MLoptions.prototype = {
 				liSE.setAttribute('ml-type', "se");
 				liSE.setAttribute('rowid', llURLs[obj].rowid);
 				liSE.setAttribute('se-label', llURLs[obj].label);
-				liSE.innerHTML = "<span class='ui-icon ui-icon-search'></span>"
-					+ llURLs[obj].label
-					+ "<br/>"
-					+ llURLs[obj].url
-					+ "<div class='edit-se'><span class='ui-icon ui-icon-pencil se-edit'></span>"
-					+ "<span class='ui-icon ui-icon-close se-remove'></span></div>";
 				
+				var liSpanIconSearch = doc.createElement("span");
+				liSpanIconSearch.setAttribute('class', 'ui-icon ui-icon-search');
+				liSE.appendChild(liSpanIconSearch);
+				liSE.appendChild(doc.createTextNode(llURLs[obj].label));
+				liSE.appendChild(doc.createElement('br'));
+				liSE.appendChild(doc.createTextNode(llURLs[obj].url));
+				liSE.appendChild(liDiv.cloneNode(true));				
 				ulSE.appendChild(liSE);
 				
 			}

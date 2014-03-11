@@ -109,7 +109,9 @@ Multilookup.Main = {
 		var tsTbox = document.getElementById( "ml-toolbar-search-tbox" );
 		if ( tsTbox ) {
 			tsTbox.value = s;
-			var t=setTimeout( "document.getElementById('ml-toolbar-search-tbox').focus()", 500 );
+			var t = setTimeout( function() {
+				document.getElementById('ml-toolbar-search-tbox').focus();
+			}, 500 );
 			
 			var tgMnpp = document.getElementById( "ml-toolbar-group-mnpp" );
 			tgMnpp.parentNode.selectedItem = tgMnpp.getElementsByAttribute( "group_id", group_id )[0];
